@@ -7,6 +7,9 @@ from sendgrid.helpers.mail import Mail
 
 
 class DateUtil:
+    def __init__(self):
+        pass
+
     def _get_today(self):
         today = datetime.date.today()
         return {"day": calendar.day_name[today.weekday()],
@@ -38,5 +41,10 @@ class Sender:
         print(response.headers)
 
 
-sender = Sender("josephdiniso@gmail.com")
-sender.send_mail()
+def main():
+    sender = Sender("josephdiniso@gmail.com")
+    sender.send_mail()
+
+
+if __name__ == "__main__":
+    main()
