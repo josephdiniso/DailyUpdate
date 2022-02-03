@@ -1,0 +1,190 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald&display=swap");
+:root {
+  --primary-color: rgb(82, 129, 231);
+  --background-color: rgb(241, 241, 241);
+}
+
+body {
+  background-color: var(--background-color);
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+.header-bar {
+  font-size: 1.0em;
+  background-color: white;
+  padding: 1em;
+}
+
+.header-bar .logo {
+  text-decoration: none;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  font-size: 1.2em;
+}
+
+.header-bar .logo span {
+  color: var(--primary-color);
+}
+
+.header-bar .date {
+  font-size: 1.2em;
+}
+
+.header-bar .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  place-content: space-between;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+}
+
+.intro .welcome-text {
+  text-align: center;
+  font-size: 1.7em;
+}
+
+.info-section .info-section-header {
+  font-size: 1.2em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  margin-left: 0.7em;
+}
+
+.info-section .info-section-header .section-icon {
+  height: 1.2em;
+  margin-right: 0.3em;
+}
+
+.info-section .info-section-header .section-title {
+  font-size: 1.3em;
+}
+
+.weather-information {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.weather-information .weather-piece {
+  margin-left: 1em;
+}
+
+.weather-information .weather-piece-text {
+  font-weight: bold;
+}
+
+.weather-information .weather-piece-text span {
+  font-weight: normal;
+}
+
+.weather-boxes {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-preferred-size: auto;
+      flex-basis: auto;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.weather-box {
+  width: 27%;
+  border: 1px solid black;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background: white;
+}
+
+.weather-icon {
+  margin: 0;
+  margin-top: auto;
+}
+
+.weather-note {
+  margin: 0;
+}
+
+.weather-time {
+  padding: 0;
+  margin: 0;
+  font-weight: bold;
+}
+
+.section-text {
+  margin-left: 3em;
+}
+
+.section-text .event .event-name {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.section-text .event li, .section-text .event ul {
+  margin-left: -3em;
+}
+
+table {
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table, th, td {
+  margin: 0;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+th, td {
+  background: white;
+}
+
+.weather-prompt {
+  font-size: 1.0em;
+  font-weight: bold;
+}
+
+.weather-prompt span {
+  font-weight: normal;
+}
+
+.forecast {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.bottom {
+  padding-bottom: 3em;
+}
+/*# sourceMappingURL=main.css.map */
