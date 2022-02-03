@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+
+// Allows you to specify css properties
+:root {
+    --primary-color: rgb(82, 129, 231);
+    --background-color: rgb(241, 241, 241);
+}
+
+body {
+    background-color: var(--background-color);
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+.header-bar {
+    font-size: 1.0em;
+    background-color: rgb(255, 255, 255);
+    // em is a type of unit, an em is a relative value
+    // it is relative to the font size of the element
+    padding: 1em;
+
+    // This can only be done because it is a scss file, normally
+    // css files are not allowed to have nested selectors
+    .logo {
+        text-decoration: none;
+        text-align: center;
+        font-weight: bold;
+        color: black;
+        font-size: 1.2em;
+
+        span {
+            color: var(--primary-color)
+        }
+    }
+
+    .date {
+        font-size: 1.2em;
+    }
+
+    .container {
+        display: flex;
+        place-content: space-between;
+        align-items: baseline;
+    }
+}
+
+.intro {
+    .welcome-text {
+        text-align: center;
+        font-size: 1.7em;
+    }
+}
+
+.info-section {
+    .info-section-header {
+        font-size: 1.2em;
+        display: flex;
+        align-items: baseline;
+        justify-content: left;
+        margin-left: 0.7em;
+
+        .section-icon {
+            height: 1.2em;
+            margin-right: 0.3em;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+        }
+    }
+}
+
+.weather-information {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .weather-piece {
+        margin-left: 1em;
+    }
+
+    .weather-piece-text {
+        font-weight: bold;
+        span {
+            font-weight: normal;
+        }
+    }
+}
+
+.weather-boxes {
+    display: flex;
+    flex-basis: auto;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.weather-box {
+    width: 27%;
+    border: 1px solid black;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    background:rgb(255, 255, 255)
+}
+
+.weather-icon {
+    margin: 0;
+    margin-top: auto;
+}
+
+.weather-note {
+    margin: 0;
+}
+
+.weather-time {
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+}
+
+.section-text {
+    margin-left: 3em;
+
+    .event {
+        .event-name {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        li, ul {
+            margin-left: -3em;
+        }
+    }
+}
+
+table {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table, th, td {
+    margin: 0;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    background: rgb(255, 255, 255);
+}
+
+.weather-prompt {
+    font-size: 1.0em;
+    font-weight: bold;
+
+    span {
+        font-weight: normal;
+    }
+}
+
+.forecast {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.bottom {
+    padding-bottom: 3em;
+}
