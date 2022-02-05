@@ -1,2 +1,4 @@
 api_key
 credentials.json
+credentials
+sendgrid.env
