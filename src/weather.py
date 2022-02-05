@@ -152,6 +152,8 @@ class Weather:
         weathers = []
         unix_times = []
         feels_like = []
+        if not self._weather_json:
+            return
         for weather_report in self._weather_json["list"]:
             if weather_report["dt"] < current_time:
                 continue
@@ -186,6 +188,7 @@ def main():
     location = Location(city, state, country)
     weatherChars = WeatherChars()
     weather = Weather(api_path, location, weatherChars, units=units)
+    print(weather.weather_chars)
 
 
 if __name__ == "__main__":
