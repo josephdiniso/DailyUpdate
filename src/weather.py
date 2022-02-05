@@ -32,6 +32,7 @@ class WeatherChars:
         self._weathers: List[Tuple[str, str]] = []
         self._wind_speed: float = 0
         self._unix_times: List[float] = []
+        self._feels_like: List[float] = []
 
     def __repr__(self):
         return f"{self._min_temp=}, {self._max_temp=}, {self._pressure=}, {self._humidity=}, {self._weathers=}, {self._wind_speed=}, {self._unix_times=}"
@@ -57,7 +58,7 @@ class WeatherChars:
 
     @property
     def pressure(self):
-        return self.pressure
+        return self._pressure
 
     @pressure.setter
     def pressure(self, value):
@@ -94,6 +95,14 @@ class WeatherChars:
     @unix_times.setter
     def unix_times(self, value):
         self._unix_times = value
+
+    @property
+    def feels_like(self):
+        return self._feels_like
+
+    @feels_like.setter
+    def feels_like(self, value):
+        self._feels_like = value
 
 
 class Weather:
@@ -142,6 +151,7 @@ class Weather:
         wind_speeds = []
         weathers = []
         unix_times = []
+        feels_like = []
         for weather_report in self._weather_json["list"]:
             if weather_report["dt"] < current_time:
                 continue
@@ -155,6 +165,7 @@ class Weather:
             mins.append(weather_report["main"]["temp_min"])
             maxes.append(weather_report["main"]["temp_max"])
             unix_times.append(weather_report["dt"])
+            feels_like.append(weather_report["main"]["feels_like"])
 
         self.weather_chars.min_temp = min(mins)
         self.weather_chars.max_temp = max(maxes)
@@ -163,6 +174,7 @@ class Weather:
         self.weather_chars.wind_speed = sum(wind_speeds) / weather_counts
         self.weather_chars.weathers = weathers
         self.weather_chars.unix_times = unix_times
+        self.weather_chars.feels_like = feels_like
 
 
 def main():

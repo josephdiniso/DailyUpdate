@@ -5,9 +5,190 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
-    <link rel="stylesheet" href="css/main.css">
+    <!-- <link rel="stylesheet" href="css/main.css"> -->
     </head>
     <body>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Oswald&display=swap");
+:root {
+  --primary-color: rgb(82, 129, 231);
+  --background-color: rgb(241, 241, 241);
+}
+
+body {
+  background-color: var(--background-color);
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+.header-bar {
+  font-size: 1.0em;
+  background-color: white;
+  padding: 1em;
+}
+
+.header-bar .logo {
+  text-decoration: none;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  font-size: 1.2em;
+}
+
+.header-bar .logo span {
+  color: var(--primary-color);
+}
+
+.header-bar .date {
+  font-size: 1.2em;
+}
+
+.header-bar .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  place-content: space-between;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+}
+
+.intro .welcome-text {
+  text-align: center;
+  font-size: 1.7em;
+}
+
+.info-section .info-section-header {
+  font-size: 1.2em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  margin-left: 0.7em;
+}
+
+.info-section .info-section-header .section-icon {
+  height: 1.2em;
+  margin-right: 0.3em;
+}
+
+.info-section .info-section-header .section-title {
+  font-size: 1.3em;
+}
+
+.weather-information {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.weather-information .weather-piece {
+  margin-left: 1em;
+}
+
+.weather-information .weather-piece-text {
+  font-weight: bold;
+}
+
+.weather-information .weather-piece-text span {
+  font-weight: normal;
+}
+
+.weather-boxes {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-preferred-size: auto;
+      flex-basis: auto;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.weather-box {
+  width: 27%;
+  border: 1px solid black;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background: white;
+}
+
+.weather-icon {
+  margin: 0;
+  margin-top: auto;
+}
+
+.weather-note {
+  margin: 0;
+}
+
+.weather-time {
+  padding: 0;
+  margin: 0;
+  font-weight: bold;
+}
+
+.section-text .event .event-name {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.section-prompt {
+  margin-left: 1em;
+}
+
+table, th, td {
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  border-collapse: collapse;
+  background: white;
+}
+
+.weather-prompt {
+  font-size: 1.0em;
+  font-weight: bold;
+}
+
+.weather-prompt span {
+  font-weight: normal;
+}
+
+.forecast {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.bottom {
+  padding-bottom: 3em;
+}
+/*# sourceMappingURL=main.css.map */
+        </style>
         <div class="header-bar">
             <div class="container">
                 <a class="logo" href="#">Daily<span>Update</span></a>
@@ -46,19 +227,19 @@
             </div>
             <div class="weather-information">
                 <div class="weather-piece">
-                    <p class="weather-piece-text">🔽Low:<span>24.62 °F</span></p>
+                    <p class="weather-piece-text">🔽Low:<span tag="low-temp">24.62 °F</span></p>
                 </div>
                 <div class="weather-piece">
-                    <p class="weather-piece-text">🔼High:<span>27.84 °F</span></p>
+                    <p class="weather-piece-text">🔼High:<span tag="high-temp">27.84 °F</span></p>
                 </div>
                 <div class="weather-piece">
-                    <p class="weather-piece-text">💥Pressure:<span>1030.0 hPa</span></p>
+                    <p class="weather-piece-text">💥Pressure:<span tag="pressure">1030.0 hPa</span></p>
                 </div>
                 <div class="weather-piece">
-                    <p class="weather-piece-text">💦Humidity:<span>90.75%</span></p>
+                    <p class="weather-piece-text">💦Humidity:<span tag="humidity">90.75%</span></p>
                 </div>
                 <div class="weather-piece">
-                    <p class="weather-piece-text">💨Wind Speed:<span>1.68 mph</span></p>
+                    <p class="weather-piece-text">💨Wind Speed:<span tag="wind-speed">1.68 mph</span></p>
                 </div>
             </div>
         </div>
@@ -69,26 +250,9 @@
                 <h1 class="section-title">What's Planned:</h1>
             </div>
             <div class="section-text">
-                <ul>
-                <div class="event">
-                    <li>
-                    <p class="event-name">
-                        Network Application Design
-                    </p>
-                    <p class="event-info">
-                        2:30 - 3:45PM, Lavery 330
-                    </p>
-                    </li>
-                </div>
-                <div class="event">
-                    <li><p class="event-name">
-                        Computer and Network Security
-                    </p>
-                    <p class="event-info">
-                        4 - 6:45PM, Surge 104C
-                    </p>
-                    </li>
-                </div>
+                <ul tag="schedule-list">
+                  </ul>
+                  </div>
                 </ul>
             </div>
         </div>
@@ -99,37 +263,11 @@
                 <h1 class="section-title">Your workout:</h1>
             </div>
             <div class="section-text">
-                <p>
+                <p class="section-prompt" tag="workout-prompt">
                     This is your workout for the day.
                 </p>
                 <div tag="workout-container">
-                  <table>
-                      <tr>
-                          <td>Thursday 1/27/22</td>
-                          <td>Reps:</td>
-                          <td>5</td>
-                      </tr>
-                      <tr>
-                          <td>FS</td>
-                          <td>210x 5</td>
-                          <td>MP: 4x5 @ 140</td>
-                      </tr>
-                      <tr>
-                          <td>325</td>
-                          <td>245x5</td>
-                          <td>Plank: 4:65s @ 45</td>
-                      </tr>
-                      <tr>
-                          <td></td>
-                          <td>275x7</td>
-                          <td>Split Squat: 4x10 @ 55 ^^</td>
-                      </tr>
-                      <tr>
-                          <td>HIIT: 10 minutes rowing machine</td>
-                          <td></td>
-                          <td></td>
-                      </tr>
-                  </table>
+                </div>
                 </div>
             </div>
             <div class="bottom">
