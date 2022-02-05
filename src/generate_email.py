@@ -8,6 +8,7 @@ import bs4
 from sheets_read import SheetsReader
 from weather import Location, WeatherChars, Weather
 from calendar_read import CalendarReader
+from sender import Sender
 
 
 class Generator:
@@ -33,7 +34,7 @@ class Generator:
             weather = Weather(api_path, location, weather_chars=weather_chars)
         self.weather = weather.weather_chars
 
-    def read_template(self, file_name: str):
+    def read_template(self, file_name: str) -> str:
         with open(file_name) as f:
             txt = f.read()
             soup = bs4.BeautifulSoup(txt, "html.parser")
@@ -41,8 +42,15 @@ class Generator:
         workout_tag[0].append(self._generate_table(soup))
         self._generate_calendar(soup)
         self._generate_weather(soup)
-        with open("testing_soup.html", "w") as f:
-            f.write(str(soup))
+        return str(soup)
+
+    @staticmethod
+    def send_email(destination, content, subject=None):
+        sender = Sender("josephdiniso@gmail.com")
+        if subject:
+            sender.send_mail(destination, content, subject=subject)
+        else:
+            sender.send_mail(destination, content)
 
     def _generate_weather(self, soup):
         low_temp = soup.find_all(tag="low-temp")
@@ -172,7 +180,8 @@ def main():
     generator.get_weather(api_path, location, units=units)
     generator.get_calendar()
 
-    generator.read_template("index.html")
+    content = generator.read_template("index.html")
+    generator.send_email("josephdiniso@vt.edu", content)
 
 
 if __name__ == "__main__":
