@@ -24,7 +24,7 @@ class CalendarReader:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    'daily_update_key.json', SCOPES)
+                    '../credentials/calendar_credentials.json', SCOPES)
                 creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
             with open('../credentials/calendar_token.json', 'w') as token:
