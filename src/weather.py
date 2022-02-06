@@ -8,6 +8,10 @@ from typing import Union, List, Tuple
 
 @dataclass
 class Location:
+    """
+    Dataclass to store location attributes
+    """
+
     def __init__(self, city: str, state: str, country: str):
         self.city = city
         self.state = state
@@ -25,84 +29,20 @@ class WeatherChars:
         self._enable_weather: bool = weather
         self._enable_wind_speed: bool = wind_speed
 
-        self._min_temp: float = 0
-        self._max_temp: float = 0
-        self._pressure: float = 0
-        self._humidity: float = 0
-        self._weathers: List[Tuple[str, str]] = []
-        self._wind_speed: float = 0
-        self._unix_times: List[float] = []
-        self._feels_like: List[float] = []
+        self.min_temp: float = 0
+        self.max_temp: float = 0
+        self.pressure: float = 0
+        self.humidity: float = 0
+        self.weathers: List[Tuple[str, str]] = []
+        self.wind_speed: float = 0
+        self.unix_times: List[float] = []
+        self.feels_like: List[float] = []
 
     def __repr__(self):
-        return f"{self._min_temp=}, {self._max_temp=}, {self._pressure=}, {self._humidity=}, {self._weathers=}, {self._wind_speed=}, {self._unix_times=}"
+        return f"{self.min_temp=}, {self.max_temp=}, {self.pressure=}, {self.humidity=}, {self.weathers=}, {self.wind_speed=}, {self.unix_times=}"
 
     def __str__(self):
         return self.__repr__()
-
-    @property
-    def min_temp(self):
-        return self._min_temp
-
-    @min_temp.setter
-    def min_temp(self, value):
-        self._min_temp = value
-
-    @property
-    def max_temp(self):
-        return self._max_temp
-
-    @max_temp.setter
-    def max_temp(self, value):
-        self._max_temp = value
-
-    @property
-    def pressure(self):
-        return self._pressure
-
-    @pressure.setter
-    def pressure(self, value):
-        self._pressure = value
-
-    @property
-    def humidity(self):
-        return self._humidity
-
-    @humidity.setter
-    def humidity(self, value):
-        self._humidity = value
-
-    @property
-    def weathers(self):
-        return self._weathers
-
-    @weathers.setter
-    def weathers(self, value):
-        self._weathers = value
-
-    @property
-    def wind_speed(self):
-        return self._wind_speed
-
-    @wind_speed.setter
-    def wind_speed(self, value):
-        self._wind_speed = value
-
-    @property
-    def unix_times(self):
-        return self._unix_times
-
-    @unix_times.setter
-    def unix_times(self, value):
-        self._unix_times = value
-
-    @property
-    def feels_like(self):
-        return self._feels_like
-
-    @feels_like.setter
-    def feels_like(self, value):
-        self._feels_like = value
 
 
 class Weather:
@@ -124,24 +64,45 @@ class Weather:
 
     # TODO: Adjust for custom time zones
     @staticmethod
-    def _convert_datetimes(unix_times: List[float]):
-        return [datetime.datetime.fromtimestamp(unix_time, datetime.timezone(datetime.timedelta(hours=-5))) for
+    def _convert_datetimes(unix_times: List[float], time_difference: int = -5) -> List[datetime.datetime]:
+        """
+        Converts unix times to datetime objects
+
+        Params:
+            unix_times: List of unix times in seconds
+        """
+        return [datetime.datetime.fromtimestamp(unix_time, datetime.timezone(datetime.timedelta(hours=time_difference))) for
                 unix_time in unix_times]
 
     @staticmethod
-    def _get_local_weather():
+    def _get_local_weather() -> "JSON":
+        """
+        Helper method to get a weather JSON saved locally
+
+        Returns:
+            JSON object of saved weather data
+        """
         with open("test.json", "r") as f:
             text = f.read()
         new_obj = json.loads(text)
         return new_obj
 
-    def _get_weather(self):
+    def _get_weather(self) -> "JSON":
+        """
+        Calls OpenWeather API and gets weather data
+
+        Returns:
+            JSON object of weather data
+        """
         q_val = f"{self.location.city},{self.location.state},{self.location.country}"
         response = requests.get(
             f"http://api.openweathermap.org/data/2.5/forecast?q={q_val}&appid={self.api_key}&units={self.units}")
         return json.loads(response.text)
 
-    def _get_forecast(self):
+    def _get_forecast(self) -> None:
+        """
+        Populates WeatherChars object with weather data for consumption
+        """
         current_time = time.time()
         weather_counts = 0
         maxes = []
