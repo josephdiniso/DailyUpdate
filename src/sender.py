@@ -31,13 +31,16 @@ class Sender:
         self.date_util = DateUtil()
         self.sender = sender
 
-    def send_mail(self):
-        with open("index.html", "r") as f:
-            content = f.read()
+    def send_mail(self, destination, content=None, subject=None):
+        if not content:
+            with open("index.html", "r") as f:
+                content = f.read()
+        if not subject:
+            subject = f"Daily Report: {self.date_util.formatted_date()}"
         message = Mail(
             from_email=self.sender,
-            to_emails='josephdiniso@vt.edu',
-            subject=f"Daily Report: {self.date_util.formatted_date()}",
+            to_emails=destination,
+            subject=subject,
             html_content=content)
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(message)
@@ -48,7 +51,7 @@ class Sender:
 
 def main():
     sender = Sender("josephdiniso@gmail.com")
-    sender.send_mail()
+    sender.send_mail("josephdiniso@vt.edu")
 
 
 if __name__ == "__main__":

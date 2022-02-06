@@ -2,3 +2,7 @@ api_key
 credentials.json
 credentials
 sendgrid.env
+*.json
+.idea
+__pycache__
+
