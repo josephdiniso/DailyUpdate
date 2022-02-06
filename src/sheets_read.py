@@ -17,15 +17,22 @@ class SheetsReader:
     def __init__(self, spreadsheet_id: str, range: str):
         self.spreadsheet_id = spreadsheet_id
         self.range = range
-        self.creds = self._authenticate()
+        self._authenticate()
 
-    def get_workout(self):
+    def get_workout(self) -> List:
+        """
+        Returns parsed workout data from the specified Google Sheet
+
+        Returns:
+            List of Lists containing string values for the cells
+        """
         values = self._get_data()
         return self._parse_data(values)
 
-    # TODO: Add authentication check
-    @staticmethod
-    def _authenticate():
+    def _authenticate(self) -> None:
+        """
+        Sets the credentials for the session
+        """
         SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
         creds = None
         if os.path.exists('../credentials/token.json'):
@@ -41,9 +48,15 @@ class SheetsReader:
             # Save the credentials for the next run
             with open('../credentials/token.json', 'w') as token:
                 token.write(creds.to_json())
-        return creds
+        self.creds = creds
 
-    def _get_data(self):
+    def _get_data(self) -> List:
+        """
+        Pulls data from range of Google Sheet
+
+        Returns
+            List of data entries
+        """
         values = None
         try:
             service = build('sheets', 'v4', credentials=self.creds)
@@ -59,7 +72,16 @@ class SheetsReader:
             print(err)
         return values
 
-    def _parse_data(self, values):
+    def _parse_data(self, values) -> List:
+        """
+        Parses entire sheet and creates a list of lists of the relevant boxes
+
+        Params:
+            values: raw Sheets data
+
+        Returns:
+            formatted Sheets data
+        """
         full_date = datetime.now().strftime("%A %-m/%-d/%y")
         printing = False
         output = []
@@ -74,7 +96,19 @@ class SheetsReader:
         return output
 
     @staticmethod
-    def _check_ending(row: List):
+    def _check_ending(row: List) -> bool:
+        """
+        Finds where a grouping ends by seeing the next cell that contains a day of the week
+
+        Fairly primitive way of going about it, but it's the only way that avoids explicitly adding a
+        break in the Google Sheet.
+
+        params:
+            row: Row in the spreadsheet
+
+        Returns:
+            True if no day is in the row, False if there is a day in the cell
+        """
         week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         for cell in row:
             for day in week:
