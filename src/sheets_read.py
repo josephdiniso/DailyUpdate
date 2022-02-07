@@ -2,15 +2,15 @@
 
 from __future__ import print_function
 from datetime import datetime
-from typing import List
+from typing import List, Any, Optional
 
 import os.path
 
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+from google.auth.transport.requests import Request  # type: ignore
+from google.oauth2.credentials import Credentials  # type: ignore
+from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore
+from googleapiclient.discovery import build  # type: ignore
+from googleapiclient.errors import HttpError  # type: ignore
 
 
 class SheetsReader:
@@ -35,22 +35,27 @@ class SheetsReader:
         """
         SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
         creds = None
-        if os.path.exists('../credentials/token.json'):
-            creds = Credentials.from_authorized_user_file('../credentials/token.json', SCOPES)
+        directory = os.path.dirname(__file__)
+        credential_dir = os.path.join(directory, "../credentials/token.json")
+        oauth_key_dir = os.path.join(directory,
+                                     "../credentials/drive_credentials.json")
+        if os.path.exists(credential_dir):
+            creds = Credentials.from_authorized_user_file(credential_dir,
+                                                          SCOPES)
         # If there are no (valid) credentials available, let the user log in.
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    '../credentials/drive_credentials.json', SCOPES)
+                    oauth_key_dir, SCOPES)
                 creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
-            with open('../credentials/token.json', 'w') as token:
+            with open(credential_dir, 'w') as token:
                 token.write(creds.to_json())
         self.creds = creds
 
-    def _get_data(self) -> List:
+    def _get_data(self) -> Optional[Any]:
         """
         Pulls data from range of Google Sheet
 
@@ -65,9 +70,6 @@ class SheetsReader:
             result = sheet.values().get(spreadsheetId=self.spreadsheet_id,
                                         range=self.range).execute()
             values = result.get('values', [])
-            if not values:
-                print('No data found.')
-                return []
         except HttpError as err:
             print(err)
         return values
@@ -98,9 +100,11 @@ class SheetsReader:
     @staticmethod
     def _check_ending(row: List) -> bool:
         """
-        Finds where a grouping ends by seeing the next cell that contains a day of the week
+        Finds where a grouping ends by seeing the next cell that contains a
+        day of the week
 
-        Fairly primitive way of going about it, but it's the only way that avoids explicitly adding a
+        Fairly primitive way of going about it, but it's the only way that
+        avoids explicitly adding a
         break in the Google Sheet.
 
         params:
@@ -109,7 +113,8 @@ class SheetsReader:
         Returns:
             True if no day is in the row, False if there is a day in the cell
         """
-        week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+                "Saturday", "Sunday"]
         for cell in row:
             for day in week:
                 if day in cell:

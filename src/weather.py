@@ -1,9 +1,10 @@
-import requests
+import requests  # type: ignore
 import json
 import time
 from dataclasses import dataclass
 import datetime
-from typing import Union, List, Tuple
+from typing import List, Any
+from typing import Tuple
 
 
 @dataclass
@@ -71,11 +72,12 @@ class Weather:
         Params:
             unix_times: List of unix times in seconds
         """
-        return [datetime.datetime.fromtimestamp(unix_time, datetime.timezone(datetime.timedelta(hours=time_difference))) for
+        return [datetime.datetime.fromtimestamp(unix_time, datetime.timezone(datetime.timedelta(hours=time_difference)))
+                for
                 unix_time in unix_times]
 
     @staticmethod
-    def _get_local_weather() -> "JSON":
+    def _get_local_weather() -> Any:
         """
         Helper method to get a weather JSON saved locally
 
@@ -87,7 +89,7 @@ class Weather:
         new_obj = json.loads(text)
         return new_obj
 
-    def _get_weather(self) -> "JSON":
+    def _get_weather(self) -> Any:
         """
         Calls OpenWeather API and gets weather data
 
@@ -118,7 +120,8 @@ class Weather:
         for weather_report in self._weather_json["list"]:
             if weather_report["dt"] < current_time:
                 continue
-            if weather_report["dt"] > current_time + (86400 // 2):
+            SECONDS_IN_DAY = 86400
+            if weather_report["dt"] > current_time + (SECONDS_IN_DAY // 2):
                 break
             weather_counts += 1
             pressures.append(weather_report["main"]["pressure"])

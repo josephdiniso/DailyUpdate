@@ -5,29 +5,33 @@ from __future__ import print_function
 import datetime
 import os.path
 
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+from google.auth.transport.requests import Request  # type: ignore
+from google.oauth2.credentials import Credentials  # type: ignore
+from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore
+from googleapiclient.discovery import build  # type: ignore
+from googleapiclient.errors import HttpError  # type: ignore
 
 
 class CalendarReader:
     def __init__(self):
         SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
         creds = None
-        if os.path.exists('../credentials/calendar_token.json'):
-            creds = Credentials.from_authorized_user_file('../credentials/calendar_token.json', SCOPES)
+
+        directory = os.path.dirname(__file__)
+        credential_dir = os.path.join(directory, "../credentials/calendar_token.json")
+        oauth_key_dir = os.path.join(directory, "../credentials/calendar_credentials.json")
+        if os.path.exists(credential_dir):
+            creds = Credentials.from_authorized_user_file(credential_dir, SCOPES)
         # If there are no (valid) credentials available, let the user log in.
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    '../credentials/calendar_credentials.json', SCOPES)
+                    oauth_key_dir, SCOPES)
                 creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
-            with open('../credentials/calendar_token.json', 'w') as token:
+            with open(credential_dir, 'w') as token:
                 token.write(creds.to_json())
         self.creds = creds
 

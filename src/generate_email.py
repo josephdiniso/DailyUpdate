@@ -4,10 +4,11 @@ from typing import Optional
 from typing import List
 from typing import Dict
 from typing import Tuple
-from dateutil import parser
+from typing import Union
+from dateutil import parser  # type: ignore
 import os
 
-import bs4
+import bs4  # type: ignore
 
 from sheets_read import SheetsReader
 from weather import Location, WeatherChars, Weather
@@ -17,11 +18,11 @@ from sender import Sender
 
 class Generator:
     def __init__(self):
-        self.workout: Optional[List[List[str]]] = None
-        self.calendar: Optional[List[Dict[str, str]]] = None
-        self.weather: Optional[List] = None
+        self.workout: List[List[str]] = []
+        self.calendar: List[Dict[Union[Dict, str]]] = []
+        self.weather: WeatherChars = WeatherChars()
 
-    def get_sheets(self, id: str, range: str) -> None:
+    def get_sheets(self, sheets_id: str, sheets_range: str) -> None:
         """
         Calls Sheets API and gets workout values
 
@@ -29,7 +30,7 @@ class Generator:
             id: ID of Sheets file
             range: Range of values to grab from Sheets file
         """
-        reader = SheetsReader(id, range)
+        reader = SheetsReader(sheets_id, sheets_range)
         self.workout = reader.get_workout()
 
     def get_calendar(self) -> None:
@@ -124,15 +125,15 @@ class Generator:
                 break
             if periods[index] == periods[index + 1]:
                 weather_times[
-                    index].string = f"{normal_times[index]} - {normal_times[index + 1]}{periods[index + 1][0]}"
+                    index].string = f"{normal_times[index]} - {normal_times[index + 1]}{periods[index + 1][0]} "
             else:
                 weather_times[
-                    index].string = f"{normal_times[index]}{periods[index][0]} - {normal_times[index + 1]}{periods[index + 1][0]}"
+                    index].string = f"{normal_times[index]}{periods[index][0]} - {normal_times[index + 1]}{periods[index + 1][0]} "
             weather_note[index].string = f"{self.weather.weathers[index][0]}"
             weather_temp[index].string = f"{self.weather.feels_like[index]} °F"
 
     @staticmethod
-    def _convert_times(unix_times: List[int]) -> Tuple[List[str], List[str]]:
+    def _convert_times(unix_times: List[float]) -> Tuple[List[str], List[str]]:
         """
         Takes a list of unix times and converts them to their periods and 12 hour times
         Params:
@@ -178,9 +179,9 @@ class Generator:
             all_day = False
             if start_val and end_val:
                 start_time = parser.parse(start_val)
-                start_time = start_time.strftime("%H:%M")
+                start_time = start_time.strftime("%-I:%M %p")
                 end_time = parser.parse(end_val)
-                end_time = end_time.strftime("%H:%M")
+                end_time = end_time.strftime("%-I:%M %p")
             else:
                 all_day = True
             location = event.get("location", "")
