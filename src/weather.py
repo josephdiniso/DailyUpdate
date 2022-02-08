@@ -112,6 +112,7 @@ class Weather:
         """
         Populates WeatherChars object with weather data for consumption
         """
+        # TODO: Clean up this function, I don't really like it
         current_time = time.time()
         weather_counts = 0
         maxes = []
