@@ -128,7 +128,9 @@ body {
 
 .weather-icon {
   margin: 0;
-  margin-top: auto;
+  margin: auto;
+  max-width: 5em;
+  max-height: 5em;
 }
 
 .weather-note {

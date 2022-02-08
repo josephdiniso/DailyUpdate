@@ -22,7 +22,8 @@ class DateUtil:
 
     def formatted_date(self):
         today = self._get_today()
-        subject = f"{today['day']}, {today['month'][:3]} {today['date']}, {str(today['year'])[-2:]}"
+        subject = f"{today['day']}, {today['month'][:3]} {today['date']}, \
+                    {str(today['year'])[-2:]}"
         return subject
 
 

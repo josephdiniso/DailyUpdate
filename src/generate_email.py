@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 from datetime import datetime
-from typing import Optional
-from typing import List
-from typing import Dict
-from typing import Tuple
-from typing import Union
+from typing import Optional, List, Dict, Tuple, Union
 from dateutil import parser  # type: ignore
 import os
 
@@ -71,6 +67,7 @@ class Generator:
             txt = f.read()
             soup = bs4.BeautifulSoup(txt, "html.parser")
 
+        self._inline_css(soup)
         self._generate_table(soup)
         self._generate_calendar(soup)
         self._generate_weather(soup)
@@ -92,6 +89,23 @@ class Generator:
         else:
             sender.send_mail(destination, content)
 
+    @staticmethod
+    def _inline_css(soup: bs4.BeautifulSoup) -> None:
+        """
+        Automatically inlines the css from a separate file
+
+        Params:
+            soup: BeautifulSoup object containing output HTML
+        """
+        head = soup.find("head")
+        style = soup.new_tag("style")
+        directory = os.path.dirname(__file__)
+        path = os.path.join(directory, "template/css/main.css")
+        with open(path, "r") as f:
+            css_text = f.read()
+        style.string = css_text
+        head.append(style)
+
     def _generate_weather(self, soup: bs4.BeautifulSoup) -> None:
         """
         Modifies HTML template with updated weather values
@@ -99,24 +113,25 @@ class Generator:
         Params:
             soup: BeautifulSoup object containing output HTML
         """
-        low_temp = soup.find_all(tag="low-temp")
-        low_temp[0].string = f"{self.weather.min_temp} °F"
+        low_temp = soup.find(tag="low-temp")
+        low_temp.string = f"{self.weather.min_temp} °F"
 
-        high_temp = soup.find_all(tag="high-temp")
-        high_temp[0].string = f"{self.weather.max_temp} °F"
+        high_temp = soup.find(tag="high-temp")
+        high_temp.string = f"{self.weather.max_temp} °F"
 
-        pressure = soup.find_all(tag="pressure")
-        pressure[0].string = f"{self.weather.pressure} hPa"
+        pressure = soup.find(tag="pressure")
+        pressure.string = f"{self.weather.pressure} hPa"
 
-        humidity = soup.find_all(tag="humidity")
-        humidity[0].string = f"{self.weather.humidity}%"
+        humidity = soup.find(tag="humidity")
+        humidity.string = f"{self.weather.humidity}%"
 
-        wind_speed = soup.find_all(tag="wind-speed")
-        wind_speed[0].string = f"{self.weather.wind_speed:.1f} mph"
+        wind_speed = soup.find(tag="wind-speed")
+        wind_speed.string = f"{self.weather.wind_speed:.1f} mph"
 
         periods, normal_times = self._convert_times(self.weather.unix_times)
         weather_times = soup.find_all(class_="weather-time")
         weather_note = soup.find_all(class_="weather-note")
+        weather_icon = soup.find_all(class_="weather-icon")
         weather_temp = soup.find_all(class_="weather-temp")
 
         assert len(weather_times) == len(weather_note) == len(weather_temp)
@@ -125,12 +140,34 @@ class Generator:
                 break
             if periods[index] == periods[index + 1]:
                 weather_times[
-                    index].string = f"{normal_times[index]} - {normal_times[index + 1]}{periods[index + 1][0]} "
+                    index].string = f"{normal_times[index]} - \
+                                    {normal_times[index + 1]}{periods[index + 1][0]} "
             else:
                 weather_times[
-                    index].string = f"{normal_times[index]}{periods[index][0]} - {normal_times[index + 1]}{periods[index + 1][0]} "
+                    index].string = f"{normal_times[index]}{periods[index][0]} - \
+                                    {normal_times[index + 1]}{periods[index + 1][0]} "
+            weather_icon[index]["src"] = self._formatted_icon(self.weather.weathers[index][2])
             weather_note[index].string = f"{self.weather.weathers[index][0]}"
             weather_temp[index].string = f"{self.weather.feels_like[index]} °F"
+
+    @staticmethod
+    def _formatted_icon(weather_id: int):
+        """
+        Helper function to get the correct OpenWeather icon based on the weather ID
+
+        Params:
+            weather_id: OpenWeather weather ID
+        """
+        mappings = {2: "11d", 3: "09d", 5: "10d", 6: "13d", 7: "50d"}
+        first_digit = weather_id // 100
+        if first_digit == 8:
+            if weather_id == 800:
+                mapping = "01d"
+            else:
+                mapping = "02d"
+        else:
+            mapping = mappings.get(first_digit, "01d")
+        return f"http://openweathermap.org/img/wn/{mapping}@4x.png"
 
     @staticmethod
     def _convert_times(unix_times: List[float]) -> Tuple[List[str], List[str]]:
@@ -143,7 +180,8 @@ class Generator:
             periods (either AM or PM) for each unix time
             times converted to 12-hour time
         """
-        full_times = [datetime.fromtimestamp(unix_time).strftime("%-I") for unix_time in unix_times]
+        full_times = [datetime.fromtimestamp(unix_time).strftime("%-I") for unix_time in
+                      unix_times]
         periods = [datetime.fromtimestamp(unix_time).strftime("%p") for unix_time in unix_times]
         return periods, full_times
 
@@ -186,7 +224,7 @@ class Generator:
                 all_day = True
             location = event.get("location", "")
             if all_day:
-                output = f"All Day"
+                output = "All Day"
             else:
                 output = f"{start_time} - {end_time}"
             if location:

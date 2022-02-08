@@ -1,10 +1,11 @@
+import os
+
 import requests  # type: ignore
 import json
 import time
 from dataclasses import dataclass
 import datetime
-from typing import List, Any
-from typing import Tuple
+from typing import List, Any, Tuple
 
 
 @dataclass
@@ -21,7 +22,8 @@ class Location:
 
 @dataclass
 class WeatherChars:
-    def __init__(self, min_temp: bool = True, max_temp: bool = True, pressure: bool = False, humidity: bool = False,
+    def __init__(self, min_temp: bool = True, max_temp: bool = True, pressure: bool = False,
+                 humidity: bool = False,
                  weather: bool = True, wind_speed: bool = False):
         self._enable_min_temp: bool = min_temp
         self._enable_max_temp: bool = max_temp
@@ -34,20 +36,22 @@ class WeatherChars:
         self.max_temp: float = 0
         self.pressure: float = 0
         self.humidity: float = 0
-        self.weathers: List[Tuple[str, str]] = []
+        self.weathers: List[Tuple[str, str, int]] = []
         self.wind_speed: float = 0
         self.unix_times: List[float] = []
         self.feels_like: List[float] = []
 
     def __repr__(self):
-        return f"{self.min_temp=}, {self.max_temp=}, {self.pressure=}, {self.humidity=}, {self.weathers=}, {self.wind_speed=}, {self.unix_times=}"
+        return f"{self.min_temp=}, {self.max_temp=}, {self.pressure=}, {self.humidity=}, " \
+               f"{self.weathers=}, {self.wind_speed=}, {self.unix_times=}"
 
     def __str__(self):
         return self.__repr__()
 
 
 class Weather:
-    def __init__(self, api_path: str, location: Location, weather_chars: WeatherChars = WeatherChars(),
+    def __init__(self, api_path: str, location: Location,
+                 weather_chars: WeatherChars = WeatherChars(),
                  units: str = "imperial"):
         with open(api_path, "r") as f:
             self.api_key = f.read().splitlines()[0]
@@ -65,14 +69,16 @@ class Weather:
 
     # TODO: Adjust for custom time zones
     @staticmethod
-    def _convert_datetimes(unix_times: List[float], time_difference: int = -5) -> List[datetime.datetime]:
+    def _convert_datetimes(unix_times: List[float], time_difference: int = -5) \
+            -> List[datetime.datetime]:
         """
         Converts unix times to datetime objects
 
         Params:
             unix_times: List of unix times in seconds
         """
-        return [datetime.datetime.fromtimestamp(unix_time, datetime.timezone(datetime.timedelta(hours=time_difference)))
+        return [datetime.datetime.fromtimestamp(unix_time, datetime.timezone(
+            datetime.timedelta(hours=time_difference)))
                 for
                 unix_time in unix_times]
 
@@ -98,7 +104,8 @@ class Weather:
         """
         q_val = f"{self.location.city},{self.location.state},{self.location.country}"
         response = requests.get(
-            f"http://api.openweathermap.org/data/2.5/forecast?q={q_val}&appid={self.api_key}&units={self.units}")
+            f"http://api.openweathermap.org/data/2.5/forecast?q={q_val}"
+            f"&appid={self.api_key}&units={self.units}")
         return json.loads(response.text)
 
     def _get_forecast(self) -> None:
@@ -127,7 +134,9 @@ class Weather:
             pressures.append(weather_report["main"]["pressure"])
             humidities.append(weather_report["main"]["humidity"])
             wind_speeds.append(weather_report["wind"]["speed"])
-            weathers.append((weather_report["weather"][0]["main"], weather_report["weather"][0]["description"]))
+            weathers.append((weather_report["weather"][0]["main"],
+                             weather_report["weather"][0]["description"],
+                             weather_report["weather"][0]["id"]))
             mins.append(weather_report["main"]["temp_min"])
             maxes.append(weather_report["main"]["temp_max"])
             unix_times.append(weather_report["dt"])
@@ -148,7 +157,8 @@ def main():
     state = "VA"
     country = "USA"
     units = "imperial"
-    api_path = "../credentials/api_key"
+    directory = os.path.dirname(__file__)
+    api_path = os.path.join(directory, "../credentials/api_key")
     location = Location(city, state, country)
     weatherChars = WeatherChars()
     weather = Weather(api_path, location, weatherChars, units=units)
