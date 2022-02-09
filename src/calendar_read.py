@@ -40,7 +40,7 @@ class CalendarReader:
             service = build('calendar', 'v3', credentials=self.creds)
             # Call the Calendar API
             now = datetime.datetime.utcnow()
-            time_max = now + datetime.timedelta(hours=24)
+            time_max = now + datetime.timedelta(hours=16)
             now = now.isoformat() + "Z"
             time_max = time_max.isoformat() + "Z"
             events_result = service.events().list(calendarId='primary', timeMin=now, timeMax=time_max,
